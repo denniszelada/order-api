@@ -11,10 +11,11 @@ export let getUser = (req: Request, res: Response, next: NextFunction) => {
 }
 
 export let addUser = (req: Request, res: Response, next: NextFunction) => {
+  console.log(`request ${req.body}`)
   const user: User = {
     id: Math.floor(Math.random() * 100) + 1,
     username: req.body.username,
-    firstName: req.body.username,
+    firstName: req.body.firstname,
     lastName: req.body.lastname,
     email: req.body.email,
     password: req.body.password,
@@ -22,6 +23,7 @@ export let addUser = (req: Request, res: Response, next: NextFunction) => {
     userStatus: 1,
   }
   users.push(user)
+  console.log(users)
   return res.status(201).send(user)
 }
 
