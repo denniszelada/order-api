@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getInventory = exports.removeOrder = exports.addOrder = exports.getOrder = void 0;
+exports.getInventory = exports.removeOrder = exports.addOrder = exports.getAllOrders = exports.getOrder = void 0;
 const _ = require("lodash");
 const orderStatus_1 = require("../model/orderStatus");
 let orders = [];
@@ -9,6 +9,14 @@ exports.getOrder = (req, res, next) => {
     const order = orders.find(obj => obj.id === Number(id));
     const httpStatusCode = order ? 200 : 404;
     return res.status(httpStatusCode).send(order);
+};
+exports.getAllOrders = (req, res, next) => {
+    const limit = Number(req.query.limit) || orders.length;
+    const offset = Number(req.query.offset) || 0;
+    return res.status(200).send(_(orders)
+        .drop(offset)
+        .take(limit)
+        .value());
 };
 exports.addOrder = (req, res, next) => {
     const order = {

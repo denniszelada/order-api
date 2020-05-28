@@ -12,6 +12,17 @@ export let getOrder = (req: Request, res: Response, next: NextFunction) => {
   return res.status(httpStatusCode).send(order)
 }
 
+export let getAllOrders = (req: Request, res: Response, next: NextFunction) => {
+  const limit = Number(req.query.limit) || orders.length
+  const offset = Number(req.query.offset) || 0
+  return res.status(200).send(
+    _(orders)
+      .drop(offset)
+      .take(limit)
+      .value()
+  )
+}
+
 export let addOrder = (req: Request, res: Response, next: NextFunction) => {
   const order: Order = {
     // generic random value from 1 to 100 only for tests so far
