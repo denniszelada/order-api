@@ -11,14 +11,14 @@ chai.use(chaiHttp)
 const expect = chai.expect
 
 const user: User = {
-  id: Math.floor(Math.random() * 100) + 1,
-  username: 'John',
-  firstName: 'John',
-  lasName: 'Doe',
   email: 'jhon@myemail.com',
+  firstName: 'John',
+  id: Math.floor(Math.random() * 100) + 1,
+  lastName: 'Doe',
   password: 'password',
   phone: '555555',
   userStatus: 1,
+  username: 'John',
 }
 
 describe('userRoute', () => {
@@ -43,7 +43,7 @@ describe('userRoute', () => {
   it('should return the user created on the step before', async () => {
     return chai
       .request(app)
-      .post(`/users/${user.username}`)
+      .get(`/users/${user.username}`)
       .then(res => {
         expect(res.status).to.be.equal(200)
         expect(res.body.username).to.be.equal(user.username)
@@ -60,7 +60,7 @@ describe('userRoute', () => {
 
     return chai
       .request(app)
-      .patch(`/users/Jhon`)
+      .patch(`/users/John`)
       .send(user)
       .then(res => {
         expect(res.status).to.be.equal(204)
@@ -72,9 +72,9 @@ describe('userRoute', () => {
       .get(`/users/${user.username}`)
       .then(res => {
         expect(res.status).to.be.equal(200)
-        expect(res.body.usernam).to.be.equal(user.username)
+        expect(res.body.username).to.be.equal(user.username)
         expect(res.body.firstName).to.be.equal(user.firstName)
-        expect(res.body.lasName).to.be.equal(user.lasName)
+        expect(res.body.lastName).to.be.equal(user.lastName)
         expect(res.body.email).to.be.equal(user.email)
         expect(res.body.password).to.be.equal(user.password)
         expect(res.body.phone).to.be.equal(user.phone)
@@ -92,7 +92,7 @@ describe('userRoute', () => {
         expect(res.status).to.be.equal(404)
       })
   })
-  it('should return 404 when it is trying to remove an user because the user does not exist', async => {
+  it('should return 404 when it is trying to remove an user because the user does not exist', async () => {
     return chai
       .request(app)
       .del(`/users/Mary`)

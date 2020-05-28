@@ -13,12 +13,12 @@ exports.getOrder = (req, res, next) => {
 exports.addOrder = (req, res, next) => {
     const order = {
         // generic random value from 1 to 100 only for tests so far
+        complete: false,
         id: Math.floor(Math.random() * 100) + 1,
-        userId: req.body.userId,
         quantity: req.body.quantity,
         shipDate: req.body.shipDate,
         status: orderStatus_1.OrderStatus.Placed,
-        complete: false,
+        userId: req.body.userId,
     };
     orders.push(order);
     return res.status(201).send(order);
@@ -33,6 +33,11 @@ exports.removeOrder = (req, res, next) => {
     return res.status(204).send();
 };
 exports.getInventory = (req, res, next) => {
-    const grouppedOrders = _.groupBy(orders, 'userId');
+    const status = req.query.status;
+    let inventoryOrders = orders;
+    if (status) {
+        inventoryOrders = inventoryOrders.filter(item => item.status === status);
+    }
+    const grouppedOrders = _.groupBy(inventoryOrders, 'userId');
     return res.status(200).send(grouppedOrders);
 };

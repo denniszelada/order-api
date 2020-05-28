@@ -15,12 +15,12 @@ export let getOrder = (req: Request, res: Response, next: NextFunction) => {
 export let addOrder = (req: Request, res: Response, next: NextFunction) => {
   const order: Order = {
     // generic random value from 1 to 100 only for tests so far
+    complete: false,
     id: Math.floor(Math.random() * 100) + 1,
-    userId: req.body.userId,
     quantity: req.body.quantity,
     shipDate: req.body.shipDate,
     status: OrderStatus.Placed,
-    complete: false,
+    userId: req.body.userId,
   }
   orders.push(order)
   return res.status(201).send(order)

@@ -12,12 +12,12 @@ chai.use(chaiHttp)
 const expect = chai.expect
 
 const order: Order = {
+  complete: false,
   id: 1,
-  userId: 20,
   quantity: 1,
   shipDate: new Date(),
   status: OrderStatus.Placed,
-  complete: false,
+  userId: 20,
 }
 
 describe('userRoute', () => {
@@ -33,18 +33,6 @@ describe('userRoute', () => {
     return chai
       .request(app)
       .post(`/store/orders`)
-      .send(order)
-      .then(res => {
-        expect(res.status).to.be.equal(201)
-        expect(res.body.userId).to.be.equal(order.userId)
-        expect(res.body.complete).to.be.equal(false)
-        order.id = res.body.id
-      })
-  })
-  it('should create a new order and retrieve it back', async () => {
-    return chai
-      .request(app)
-      .post('/store/orders')
       .send(order)
       .then(res => {
         expect(res.status).to.be.equal(201)
