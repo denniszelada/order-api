@@ -40,6 +40,12 @@ export let removeOrder = (req: Request, res: Response, next: NextFunction) => {
 }
 
 export let getInventory = (req: Request, res: Response, next: NextFunction) => {
-  const grouppedOrders = _.groupBy(orders, 'userId')
+  const status = req.query.status
+  let inventoryOrders = orders
+  if (status) {
+    inventoryOrders = inventoryOrders.filter(item => item.status === status)
+  }
+
+  const grouppedOrders = _.groupBy(inventoryOrders, 'userId')
   return res.status(200).send(grouppedOrders)
 }
