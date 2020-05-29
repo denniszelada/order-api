@@ -2,21 +2,25 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getInventory = exports.removeOrder = exports.addOrder = exports.getAllOrders = exports.getOrder = void 0;
 const _ = require("lodash");
-const orderStatus_1 = require("../model/orderStatus");
+const orderStatus_1 = require("../models/orderStatus");
+const APPLICATION_JSON = 'application/json';
+const applicationType_1 = require("../models/applicationType");
+const orderApiUtility_1 = require("../utility/orderApiUtility");
 let orders = [];
 exports.getOrder = (req, res, next) => {
     const id = req.params.id;
     const order = orders.find(obj => obj.id === Number(id));
     const httpStatusCode = order ? 200 : 404;
-    return res.status(httpStatusCode).send(order);
+    return orderApiUtility_1.formatOutput(res, order, httpStatusCode, applicationType_1.ApplicationType.JSON);
 };
 exports.getAllOrders = (req, res, next) => {
     const limit = Number(req.query.limit) || orders.length;
     const offset = Number(req.query.offset) || 0;
-    return res.status(200).send(_(orders)
+    const filteredOrders = _(orders)
         .drop(offset)
         .take(limit)
-        .value());
+        .value();
+    return orderApiUtility_1.formatOutput(res, filteredOrders, 200, applicationType_1.ApplicationType.JSON);
 };
 exports.addOrder = (req, res, next) => {
     const order = {
@@ -29,7 +33,7 @@ exports.addOrder = (req, res, next) => {
         userId: req.body.userId,
     };
     orders.push(order);
-    return res.status(201).send(order);
+    return orderApiUtility_1.formatOutput(res, order, 201, applicationType_1.ApplicationType.JSON);
 };
 exports.removeOrder = (req, res, next) => {
     const id = Number(req.params.id);
@@ -38,7 +42,7 @@ exports.removeOrder = (req, res, next) => {
         return res.status(404).send();
     }
     orders = orders.filter(item => item.id !== id);
-    return res.status(204).send();
+    return orderApiUtility_1.formatOutput(res, {}, 204, applicationType_1.ApplicationType.JSON);
 };
 exports.getInventory = (req, res, next) => {
     const status = req.query.status;
@@ -47,5 +51,5 @@ exports.getInventory = (req, res, next) => {
         inventoryOrders = inventoryOrders.filter(item => item.status === status);
     }
     const grouppedOrders = _.groupBy(inventoryOrders, 'userId');
-    return res.status(200).send(grouppedOrders);
+    return orderApiUtility_1.formatOutput(res, grouppedOrders, 200, applicationType_1.ApplicationType.JSON);
 };

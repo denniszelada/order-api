@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response } from 'express'
-import { default as User } from '../model/user'
+import { ApplicationType } from '../models/applicationType'
+import { default as User } from '../models/user'
+import { formatOutput } from '../utility/orderApiUtility'
+const APPLICATION_JSON = 'application/json'
 
 let users: Array<User> = []
 
@@ -7,22 +10,24 @@ export let getUser = (req: Request, res: Response, next: NextFunction) => {
   const username = req.params.username
   const user = users.find(obj => obj.username === username)
   const httpStatusCode = user ? 200 : 404
-  return res.status(httpStatusCode).send(user)
+
+  return formatOutput(res, user, httpStatusCode, ApplicationType.JSON)
 }
 
 export let addUser = (req: Request, res: Response, next: NextFunction) => {
   const user: User = {
+    // generic random value from 1 to 100 only for tests so far
     email: req.body.email,
-    firstName: req.body.firstname,
+    firstName: req.body.firstName,
     id: Math.floor(Math.random() * 100) + 1,
-    lastName: req.body.lastname,
+    lastName: req.body.lastName,
     password: req.body.password,
     phone: req.body.phone,
     userStatus: 1,
     username: req.body.username,
   }
   users.push(user)
-  return res.status(201).send(user)
+  return formatOutput(res, user, 201, ApplicationType.JSON)
 }
 
 export let updateUser = (req: Request, res: Response, next: NextFunction) => {
@@ -43,7 +48,7 @@ export let updateUser = (req: Request, res: Response, next: NextFunction) => {
   user.userStatus = req.body.userStatus || user.userStatus
 
   users[userIndex] = user
-  return res.status(204).send()
+  return formatOutput(res, {}, 204, ApplicationType.JSON)
 }
 
 export let removeUser = (req: Request, res: Response, next: NextFunction) => {
@@ -55,6 +60,5 @@ export let removeUser = (req: Request, res: Response, next: NextFunction) => {
   }
 
   users = users.filter(item => item.username !== username)
-
-  return res.status(204).send()
+  return formatOutput(res, {}, 204, ApplicationType.JSON)
 }
