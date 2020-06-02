@@ -1,10 +1,9 @@
 import { OrderStatus } from './orderStatus'
 
 export default interface Order {
-  id: Number
-  userId: Number
+  complete: Boolean
   quantity: Number
   shipDate: Date
   status: OrderStatus
-  complete: Boolean
+  userId: Number
 }
