@@ -53,6 +53,6 @@
     "@types/lodash": "^4.14.153",
     "body-parser": "^1.18.3",
     "chai-http": "^4.2.1",
-    "express": "^4.16.4"
+    "express": "^4.17.3"
   }
 }
